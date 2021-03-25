@@ -1,6 +1,11 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
+// create application/json parser
+app.use(bodyParser.json());
+// create application/x-www-form-urlencoded parser
+app.use(bodyParser.urlencoded({ extended: false }));
 
 const MongoClient = require('mongodb').MongoClient;
 
@@ -16,15 +21,17 @@ app.get('/', (req, res) => {
 
 
 client.connect(err => {
-    const collection = client.db("organicdb").collection("products");
+    const productCollection = client.db("organicdb").collection("products");
     // send data to database
-    const product = { name: "honey", price: 50, quantity: 10 };
-    collection.insertOne(product)
-        .then(result => {
-            console.log('one product inserted successfully');
-        })
-    console.log('database connected');
-    // client.close();
+    app.post("/addProduct", (req, res) => {
+        const product = req.body;
+        // console.log(product);
+        productCollection.insertOne(product)
+            .then(result => {
+                console.log('data added successfully');
+                res.send('product added successfully!')
+            })
+    })
 });
 
 app.listen(3000);
