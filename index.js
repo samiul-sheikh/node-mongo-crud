@@ -22,6 +22,15 @@ app.get('/', (req, res) => {
 
 client.connect(err => {
     const productCollection = client.db("organicdb").collection("products");
+
+    // read data from database
+    app.get('/products', (req, res) => {
+        productCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    })
+
     // send data to database
     app.post("/addProduct", (req, res) => {
         const product = req.body;
