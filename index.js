@@ -51,6 +51,19 @@ client.connect(err => {
             })
     })
 
+    // Update or modify a single item and save database
+    app.patch('/update/:id', (req, res) => {
+        // console.log(req.body.price);
+        productCollection.updateOne({ _id: ObjectId(req.params.id) },
+            {
+                $set: { price: req.body.price, quantity: req.body.quantity }
+            }
+        )
+            .then(result => {
+                console.log(result);
+            })
+    })
+
     // delete data from database & UI
     app.delete('/delete/:id', (req, res) => {
         // console.log(req.params.id);
