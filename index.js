@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 
 const password = 'test1234';
 
@@ -41,6 +42,16 @@ client.connect(err => {
                 res.send('product added successfully!')
             })
     })
+
+    // delete data from database & UI
+    app.delete('/delete/:id', (req, res) => {
+        // console.log(req.params.id);
+        productCollection.deleteOne({ _id: ObjectId(req.params.id) })
+            .then(result => {
+                console.log(result);
+            })
+    })
+
 });
 
 app.listen(3000);
