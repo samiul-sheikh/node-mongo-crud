@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <h1>Hello everyone! I have a mongo database!!!</h1>
+    <h1>Hello everyone! I have a mongo Database!!!</h1>
     <form action="/addProduct" method="post">
         <input type="text" placeholder="name" name="name">
         <input type="text" placeholder="price" name="price">
@@ -32,12 +32,13 @@
                     console.log(products);
                     // display product in UI
                     const container = document.getElementById('products');
+                    container.innerHTML = '';
                     // console.log(container);
                     products.forEach(pd => {
                         const item = document.createElement('p');
                         item.innerHTML = `<strong>${pd.name}</strong> - price: ${pd.price} - quantity: ${pd.quantity}
                         <button onclick="loadProduct('${pd._id}')">Update</button>    
-                        <button onclick="deleteProduct('${pd._id}')">Delete</button>
+                        <button onclick="deleteProduct(event, '${pd._id}')">Delete</button>
                         `;
                         container.appendChild(item);
                     });
@@ -74,19 +75,27 @@
                 body: JSON.stringify(product)
             })
                 .then(res => res.json())
-                .then(data => {
-                    console.log('updated');
+                .then(result => {
+                    // console.log('updated');
+                    if (result) {
+                        loadAllProducts()
+                        document.getElementById('update').innerHTML = '';
+                    }
                 })
         }
 
-        function deleteProduct(id) {
+        function deleteProduct(event, id) {
             // console.log(id);
+            // console.log(event.target);
             fetch(`/delete/${id}`, {
                 method: 'DELETE'
             })
                 .then(res => res.json())
                 .then(result => {
-                    console.log('deleted successfully')
+                    // console.log('deleted successfully')
+                    if (result) {
+                        event.target.parentNode.style.display = 'none';
+                    }
                 })
         }
     </script>
